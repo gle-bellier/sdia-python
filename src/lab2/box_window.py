@@ -1,4 +1,5 @@
 from lab2.utils import get_random_number_generator
+import numpy as np
 
 
 class BoxWindow:
@@ -54,9 +55,10 @@ class BoxWindow:
 
     def volume(self):
         """[summary]"""
-        for elm in self.dimension()
-
-        return
+        vol = 0
+        for elm in self.dimension():
+            vol *= elm
+        return vol
 
     def indicator_function(self, args):
         """We check if a point is in a box
@@ -66,6 +68,9 @@ class BoxWindow:
         """
         return args in self
 
+    def get_random_point_inside(self):
+        return np.array([np.random.uniform(*dim) for dim in self.bounds])
+
     def rand(self, n=1, rng=None):
         """Generate ``n`` points uniformly at random inside the :py:class:`BoxWindow`.
 
@@ -74,7 +79,7 @@ class BoxWindow:
             rng ([type], optional): [description]. Defaults to None.
         """
         rng = get_random_number_generator(rng)
-        return
+        return [self.get_random_point_inside()] * n
 
 
 class UnitBoxWindow(BoxWindow):
@@ -85,4 +90,8 @@ class UnitBoxWindow(BoxWindow):
             dimension ([type]): [description]
             center ([type], optional): [description]. Defaults to None.
         """
-        super(BoxWindow, self).__init__(args)
+
+        bounds = np.array([[c - dimension / 2, c + dimension / 2]
+                           for c in center])
+
+        super(self.__class__, self).__init__(bounds)
