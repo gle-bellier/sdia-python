@@ -8,7 +8,7 @@ class BoxWindow:
         """[summary]
 
         Args:
-            args ([type]): [description]
+            args (array of int): the array have dimmensions 2x1, 2x2 or 3x2, each sub array represent the coordinate of the two points on the x, y or z axis.
         """
         self.bounds = args
 
@@ -18,7 +18,8 @@ class BoxWindow:
         Returns:
             [type]: [description]
         """
-        return ""
+        l_str = list(map(lambda x: f"[{x[0]}, {x[1]}]", self.bounds))
+        return "BoxWindow: " + " x ".join(l_str)
 
     def __len__(self):
         return
