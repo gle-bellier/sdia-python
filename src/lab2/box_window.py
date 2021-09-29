@@ -12,7 +12,7 @@ class BoxWindow:
         """
         self.bounds = args
 
-    def __repr__(self):
+    def __str__(self):
         r"""BoxWindow: :math:`[a_1, b_1] \times [a_2, b_2] \times \cdots`
 
         Returns:
