@@ -16,32 +16,55 @@ class BoxWindow:
         r"""BoxWindow: :math:`[a_1, b_1] \times [a_2, b_2] \times \cdots`
 
         Returns:
-            [type]: [description]
+            string
         """
         l_str = list(map(lambda x: f"[{x[0]}, {x[1]}]", self.bounds))
         return "BoxWindow: " + " x ".join(l_str)
 
     def __len__(self):
-        return
+        return len(self.bounds)
 
     def __contains__(self, args):
-        return True or False
+        for i in range(len(args)):
+            if not (self.bounds[i][0] <= args[i] <= self.bounds[i][1]):
+                return False
+        return True
+
+    # def __contains__(self, point):
+    #     assert len(point) = len(self)
+    #     for (a,b), x in zip(self.bounds, point):
+    #           if not (a<= x <= b):
+    #             return False
+    #     return True
+
+    # def __contains__(self, point):
+    #     return all(a<= x <= b) for (a,b), x in zip(self.bounds, point)
+
+    # def __contains__(self, point):
+    #     a = self.bounds([:,0])
+    #     b = self.bounds([:,1])
+    #     return np.all(np.logical_and(a<=point, point <= b))
 
     def dimension(self):
         """[summary]"""
-        return
+        dim = []
+        for (a, b) in self.bounds:
+            dim += [b - a]
+        return dim
 
     def volume(self):
         """[summary]"""
+        for elm in self.dimension()
+
         return
 
     def indicator_function(self, args):
-        """[summary]
+        """We check if a point is in a box
 
         Args:
-            args ([type]): [description]
+            args (array of int of size 1x2): we give the coordinate of a point
         """
-        return
+        return args in self
 
     def rand(self, n=1, rng=None):
         """Generate ``n`` points uniformly at random inside the :py:class:`BoxWindow`.

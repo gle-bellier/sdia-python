@@ -6,6 +6,4 @@ bounds = np.array([[2.5, 2.5]])
 
 box = BoxWindow(bounds)
 
-print(box.bounds)
-
-box
+print(box.dimension())
