@@ -25,11 +25,11 @@ class BoxWindow:
     def __len__(self):
         return len(self.bounds)
 
-    def __contains__(self, args):
-        for i in range(len(args)):
-            if not (self.bounds[i][0] <= args[i] <= self.bounds[i][1]):
-                return False
-        return True
+    # def __contains__(self, args):
+    #     for i in range(len(args)):
+    #         if not (self.bounds[i][0] <= args[i] <= self.bounds[i][1]):
+    #             return False
+    #     return True
 
     # def __contains__(self, point):
     #     assert len(point) = len(self)
@@ -38,8 +38,8 @@ class BoxWindow:
     #             return False
     #     return True
 
-    # def __contains__(self, point):
-    #     return all(a<= x <= b) for (a,b), x in zip(self.bounds, point)
+    def __contains__(self, point):
+        return all(a<= x <= b) for (a,b), x in zip(self.bounds, point)
 
     # def __contains__(self, point):
     #     a = self.bounds([:,0])
