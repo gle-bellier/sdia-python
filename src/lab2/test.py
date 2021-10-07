@@ -15,5 +15,8 @@ from lab2.box_window import *  # ! no wildcard import, import specific functions
 
 uB = UnitBoxWindow(5, np.array([[2.5, 50, 4]]))
 
-print(uB.volume())
-print(uB.indicator_function(np.array([[2, 3], [0, 0], [3, 2]])))
+print(uB.rand(4))
+
+center = np.array([[0, 0, 0]])
+ball = BallWindow(center, 3)
+print(ball.volume())

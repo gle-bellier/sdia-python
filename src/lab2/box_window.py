@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy.special import gamma
 
 from lab2.utils import get_random_number_generator
 
@@ -124,21 +125,7 @@ class BallWindow:
         """
         # * Nice vectorization using numpy
         # ? how about np.linalg.norm
-        return np.sqrt(np.sum(np.power(x - self.center, 2)))
-
-    # ? interesting but unused
-    # todo test it
-    def dist_to_ball(self, x):
-        """Compute the distance of a given point to the surface of the ball window.
-
-        Args:
-            x (float array): coordinates of the point of interest.
-
-        Returns:
-            float: distance of the given point to the surface of the ball window.
-        """
-        # ? a distance is supposed to be positive isn't it
-        return self.dist_to_center(x) - self.radius
+        return np.linalg.norm(x - self.center)
 
     def __contains__(self, x):
         """Compute whether a given point is contained in the ball window or not.
@@ -168,12 +155,7 @@ class BallWindow:
         Returns:
             int: number of dimension of the ball window.
         """
-        return len(self.center)
-
-
-    @staticmethod
-    def gamma(x):
-
+        return len(self.center[0])
 
     # todo test it
     def volume(self):
@@ -182,8 +164,10 @@ class BallWindow:
         Returns:
             float: volume of the ball window.
         """
-        # ! valid only in 3D
-        return 4 * np.pi * np.power(self.radius, 3) / 3
+        print(len(self) / 2)
+        return np.power(np.pi,
+                        len(self) / 2) * np.power(
+                            self.radius, len(self)) / gamma(len(self) / 2 + 1)
 
 
 # * Nice implementation!
