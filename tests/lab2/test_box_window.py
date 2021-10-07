@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from lab2.box_window import BoxWindow
+from lab2.box_window import BoxWindow, UnitBoxWindow, BallWindow
 
 
 def test_raise_type_error_when_something_is_called():
@@ -52,6 +52,7 @@ def test_indicator_function_box_2d(box_2d_05, point, expected):
 @pytest.mark.parametrize(
     "bounds, expected",
     [
+<<<<<<< HEAD
         (np.array([[2.5, 2.5]]), [0]),
         (np.array([[0, 5], [0, 5]]), [5, 5]),
         (np.array([[0, 5], [-1.45, 3.14], [-10, 10]]), [5, 4.59, 20],),
@@ -59,3 +60,49 @@ def test_indicator_function_box_2d(box_2d_05, point, expected):
 )
 def test_dimension(bounds, expected):
     assert BoxWindow(bounds).dimension() == expected
+=======
+        (np.array([[2.5, 2.5]]), np.array([2.5])),
+        (np.array([[0, 5], [0, 5]]), np.array([2.5, 2.5])),
+        (
+            np.array([[0, 5], [-1, 3], [-10, 10]]),
+            np.array([2.5, 1, 0]),
+        ),
+    ],
+)
+def test_box_center(bounds, expected):
+    assert (BoxWindow(bounds).center() == expected).all()
+
+
+@pytest.mark.parametrize(
+    "args, expected",
+    [
+        ((10, np.array([[2.5, 2.5]])), np.array([[2.5, 2.5]])),
+    ],
+)
+def test_unit_box_center(args, expected):
+    assert (UnitBoxWindow(*args).center() == expected).all()
+
+
+@pytest.mark.parametrize(
+    "args, expected",
+    [
+        ((np.array([[2.5, 2.5]]), 10), np.array([[2.5, 2.5]])),
+    ],
+)
+def test_center_ball_window(args, expected):
+    assert (BallWindow(*args).center == expected).all()
+
+
+@pytest.mark.parametrize(
+    "args,  expected",
+    [
+        ((np.array([[2.5, 2.5]]), 10, np.array([[2.5, 2.5]])), True),
+        ((np.array([[2, 5]]), 4, np.array([[2.5, 2.5]])), True),
+        ((np.array([[2, 2]]), .5, np.array([[2.5, 2.5]])), False),
+        ((np.array([[0, 2, 3]]), .5, np.array([[1, 2.5, 2.5]])), False),
+        ((np.array([[0, 2, 3, 4]]), 5, np.array([[1, 3, 2.5, 2.5]])), True),
+    ],
+)
+def test_in_ball_window(args, expected):
+    assert BallWindow(*args[:2]).__contains__(args[-1]) == expected
+>>>>>>> 33d47d303384c651375b0880d2b8406c199949a6
