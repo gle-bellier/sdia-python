@@ -164,7 +164,7 @@ class BallWindow:
         Returns:
             float: volume of the ball window.
         """
-        print(len(self) / 2)
+        # Using the gamma function to compute the volume of the ball
         return np.power(np.pi,
                         len(self) / 2) * np.power(
                             self.radius, len(self)) / gamma(len(self) / 2 + 1)
