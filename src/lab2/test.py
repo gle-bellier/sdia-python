@@ -10,5 +10,7 @@ from lab2.box_window import UnitBoxWindow
 # print(len(uB))
 # print(uB)
 
-uB = UnitBoxWindow(10, np.array([[2.5, 2.5]]))
-print(uB.center())
+uB = UnitBoxWindow(10, np.array([[2.5, 5], [0, 4]]))
+
+print(uB.indicator_function(np.array([[2, 3], [0, 0], [3, 2]])))
+print()

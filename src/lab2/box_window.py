@@ -13,7 +13,7 @@ class BoxWindow:
             args (list of N float array): [a, b] bounds for each of the N dimensions of the window box.
         """
 
-        assert all(args[:,0] <= args[:,1])
+        assert (args[:,0] <= args[:,1]).all()
 
         self.bounds = args
 
@@ -28,9 +28,8 @@ class BoxWindow:
         l_str = list(map(lambda x: f"[{x[0]}, {x[1]}]", self.bounds))
         return "BoxWindow: " + " x ".join(l_str)
 
-     def __len__(self):
+    def __len__(self):
         return len(self.bounds)
-
 
     def __contains__(self, x):
         # * consider argument x -> point, or in iteration x -> coor
@@ -38,7 +37,7 @@ class BoxWindow:
         return all(self.bounds[:,0] <= x) and all(x <= self.bounds[:,1])
         # return all(a <= p <= b for (a, b), p in zip(self.bounds, x))
 
-     def dimension(self):
+    def dimension(self):
         """Returns the number of dimension of the window box
 
         Returns:
@@ -66,15 +65,6 @@ class BoxWindow:
         """
         return args in self
 
-    def get_random_point_inside(self, rng):
-        """Returns a point at random in the window box
-
-        Returns:
-            float array: random point in the bow window
-        """
-        rng = get_random_number_generator(rng)
-        # * exploit numpy, rng.uniform(a, b, size=n)
-        return np.array([np.random.uniform(*seg) for seg in self.bounds])
 
     # todo test it
     def rand(self, n=1, rng=None):
@@ -87,10 +77,8 @@ class BoxWindow:
         # ? Returns:
         """
         rng = get_random_number_generator(rng)
-        # * Interesting try using get_random_point_inside
-        # * exploit numpy, rng.uniform(a, b, size=n)
-        # ! USE rng
-        return [self.get_random_point_inside()] * n
+        np.random.unform()
+        return [self.get_random_point_inside()]
 
     def center(self):
         """Compute center of the box window.
@@ -112,7 +100,8 @@ class UnitBoxWindow(BoxWindow):
         """
         # * exploit numpy vectorization power
         # ? how about np.add.outer
-        bounds = np.array([[c - dimension / 2, c + dimension / 2]               for c in center])
+        bounds = np.array([[c - dimension / 2, c + dimension / 2]
+                           for c in center])
 
         super(UnitBoxWindow, self).__init__(bounds)
 
