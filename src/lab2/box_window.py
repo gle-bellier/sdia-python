@@ -73,11 +73,11 @@ class BoxWindow:
             n (int, optional): [description]. Defaults to 1.
             rng ([type], optional): [description]. Defaults to None.
 
-        # ? Returns:
+        Returns:
+            returns a float array with points in the bounds of the box
         """
         rng = get_random_number_generator(rng)
-        np.random.unform()
-        return [self.get_random_point_inside()]
+        return np.array([[rng.uniform(*bound) for bound in self.bounds] for i in range(n)])
 
     def center(self):
         """Compute center of the box window.
@@ -174,6 +174,7 @@ class BallWindow:
         """
         return len(self.center)
 
+
     # todo test it
     def volume(self):
         """Computes the volume of the ball.
@@ -182,32 +183,32 @@ class BallWindow:
             float: volume of the ball window.
         """
         # ! valid only in 3D
-        return 4 * np.pi * np.power(self.radius, 3) / 3
+        return (4 * np.pi * np.power(self.radius, 3) / 3)
 
 
 # * Nice implementation!
 # todo write more comments and document the code, for now it's not cristal clear
-def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
-    """Estimating pi using the rejection sampling method
+    def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
+        """Estimating pi using the rejection sampling method
 
-    Args:
-        n (int, optional): number of iterations for pi estimation. Defaults to int(1e5).
-    Returns:
-        float list: list of all estimations of pi (last should be the more accurate)
-    """
-    center = np.array([0, 0])
+        Args:
+            n (int, optional): number of iterations for pi estimation. Defaults to int(1e5).
+        Returns:
+            float list: list of all estimations of pi (last should be the more accurate)
+        """
+        center = np.array([0, 0])
 
-    ball = BallWindow(center, 1)
-    unit_box = UnitBoxWindow(2, center)
+        ball = BallWindow(center, 1)
+        unit_box = UnitBoxWindow(2, center)
 
-    # * exploit numpy vectorization power,
-    # using unit_box.rand, ball.indicator_function and np.cumsum
-    c = 0
-    rslt = []  # ! naming: rslt is not clear
-    for i in range(n):
-        c += unit_box.get_random_point_inside() in ball
-        rslt += [4 * c / (i + 1)]
-    return rslt
+        # * exploit numpy vectorization power,
+        # using unit_box.rand, ball.indicator_function and np.cumsum
+        c = 0
+        l_sum = []  # ! naming: rslt is not clear
+        for i in range(n):
+            c += unit_box.get_random_point_inside() in ball
+            l_sum += [4 * c / (i + 1)]
+        return l_sum
 
 
 if __name__ == "__main__":
