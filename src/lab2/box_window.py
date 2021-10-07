@@ -49,13 +49,7 @@ class BoxWindow:
         Returns:
             float: volume of the window box.
         """
-        # * exploit numpy vectors, use - or np.diff, and np.prod
-        v = 1
-        # * consider for a, b in self.bounds
-        for dim in self.bounds:
-            v *= np.abs(dim[0] - dim[1])
-            # ? why using abs, isn't dim[1] > dim[0], is this tested
-        return v
+        return np.prod(self.bounds[:, 1] - self.bounds[:, 0])
 
     def indicator_function(self, args):
         """Returns if args is in the window box.
@@ -79,8 +73,7 @@ class BoxWindow:
         # ? Returns:
         """
         rng = get_random_number_generator(rng)
-        np.random.unform()
-        return [self.get_random_point_inside()]
+        return np.array([np.random.uniform(*bound) for bound in self.bounds])
 
     def center(self):
         """Compute center of the box window.
@@ -177,6 +170,11 @@ class BallWindow:
         """
         return len(self.center)
 
+
+    @staticmethod
+    def gamma(x):
+
+
     # todo test it
     def volume(self):
         """Computes the volume of the ball.
@@ -206,11 +204,11 @@ def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
     # * exploit numpy vectorization power,
     # using unit_box.rand, ball.indicator_function and np.cumsum
     c = 0
-    rslt = []  # ! naming: rslt is not clear
+    l_sum = []  # ! naming: rslt is not clear
     for i in range(n):
         c += unit_box.get_random_point_inside() in ball
-        rslt += [4 * c / (i + 1)]
-    return rslt
+        l_sum += [4 * c / (i + 1)]
+    return l_sum
 
 
 if __name__ == "__main__":
