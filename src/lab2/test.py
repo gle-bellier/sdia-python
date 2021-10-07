@@ -1,9 +1,6 @@
-#
-# ? this file would sit in the tests/lab2 folder wouldn't it
-
 import numpy as np
 
-from lab2.box_window import *  # ! no wildcard import, import specific functions
+from lab2.box_window import UnitBoxWindow
 
 # uB = BallWindow([0, .3, 4, 0], 10)
 # x = np.array([5, 13, 5.3, 4])

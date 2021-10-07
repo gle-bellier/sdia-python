@@ -7,21 +7,13 @@ from lab2.utils import get_random_number_generator
 # todo clean up the docstrings
 # todo test the whole class
 class BoxWindow:
-<<<<<<< HEAD
     """[This class create Boxes]"""
-=======
-    """[summary]"""
->>>>>>> 33d47d303384c651375b0880d2b8406c199949a6
 
     def __init__(self, args):
         """Create bow window
 
         Args:
-<<<<<<< HEAD
-            args (array of int): the array have dimmensions 2x1, 2x2 or 3x2, each sub array represent the coordinate of the two points on the x, y or z axis.
-=======
             args (list of N float array): [a, b] bounds for each of the N dimensions of the window box.
->>>>>>> 33d47d303384c651375b0880d2b8406c199949a6
         """
         self.bounds = args
 
@@ -29,11 +21,7 @@ class BoxWindow:
         r"""BoxWindow: :math:`[a_1, b_1] \times [a_2, b_2] \times \cdots`
 
         Returns:
-<<<<<<< HEAD
-            string
-=======
             str: string representation of the box window.
->>>>>>> 33d47d303384c651375b0880d2b8406c199949a6
         """
         # * Nice try!
         # ? how about a list comprehension using for a, b in self.bounds
@@ -44,28 +32,6 @@ class BoxWindow:
     def __len__(self):
         return len(self.bounds)
 
-<<<<<<< HEAD
-    # def __contains__(self, args):
-    #     for i in range(len(args)):
-    #         if not (self.bounds[i][0] <= args[i] <= self.bounds[i][1]):
-    #             return False
-    #     return True
-
-    # def __contains__(self, point):
-    #     assert len(point) = len(self)
-    #     for (a,b), x in zip(self.bounds, point):
-    #           if not (a<= x <= b):
-    #             return False
-    #     return True
-
-    def __contains__(self, point):
-        return all(a<= x <= b) for (a,b), x in zip(self.bounds, point)
-
-    # def __contains__(self, point):
-    #     a = self.bounds([:,0])
-    #     b = self.bounds([:,1])
-    #     return np.all(np.logical_and(a<=point, point <= b))
-=======
     # ! this method is not used
     # todo convert it to a static method
     def in_segment(self, x, segment):
@@ -84,40 +50,18 @@ class BoxWindow:
         # ! be careful, x is used twice in different context
         # * consider argument x -> point, or in iteration x -> coor
         return all(a <= x <= b for (a, b), x in zip(self.bounds, x))
->>>>>>> 33d47d303384c651375b0880d2b8406c199949a6
 
     # todo test it
     def dimension(self):
-<<<<<<< HEAD
-        """[summary]"""
-        dim = []
-        for (a, b) in self.bounds:
-            dim += [b - a]
-        return dim
-=======
         """Returns the number of dimension of the window box
 
         Returns:
             int: number of dimensions.
         """
         return len(self)
->>>>>>> 33d47d303384c651375b0880d2b8406c199949a6
 
     # todo test it
     def volume(self):
-<<<<<<< HEAD
-        """[summary]"""
-        vol = 0
-        for elm in self.dimension():
-            vol *= elm
-        return vol
-
-    def indicator_function(self, args):
-        """We check if a point is in a box
-
-        Args:
-            args (array of int of size 1x2): we give the coordinate of a point
-=======
         """Returns the volume of the window box defined as the product of size of each dimension.
 
         Returns:
@@ -139,7 +83,6 @@ class BoxWindow:
 
         Returns:
             bool: True if point in window box, else False.
->>>>>>> 33d47d303384c651375b0880d2b8406c199949a6
         """
         # ? how would you handle multiple points
         return args in self
@@ -193,13 +136,6 @@ class UnitBoxWindow(BoxWindow):
             dimension (float): [description]
             center (float array, optional): center of the window.
         """
-<<<<<<< HEAD
-
-        bounds = np.array([[c - dimension / 2, c + dimension / 2]
-                           for c in center])
-
-        super(self.__class__, self).__init__(bounds)
-=======
         # * exploit numpy vectorization power
         # ? how about np.add.outer
         bounds = np.array([[c - dimension / 2, c + dimension / 2] for c in center])
@@ -319,4 +255,3 @@ if __name__ == "__main__":
     plt.title("Estimation of pi over iterations")
     plt.legend()
     plt.show()
->>>>>>> 33d47d303384c651375b0880d2b8406c199949a6
