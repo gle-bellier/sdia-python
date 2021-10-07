@@ -12,6 +12,9 @@ class BoxWindow:
         Args:
             args (list of N float array): [a, b] bounds for each of the N dimensions of the window box.
         """
+
+        assert all(args[:,0] <= args[:,1])
+
         self.bounds = args
 
     def __str__(self):
@@ -25,30 +28,17 @@ class BoxWindow:
         l_str = list(map(lambda x: f"[{x[0]}, {x[1]}]", self.bounds))
         return "BoxWindow: " + " x ".join(l_str)
 
-    # todo test it
-    def __len__(self):
+     def __len__(self):
         return len(self.bounds)
 
-    # ! this method is not used
-    @staticmethod
-    def in_segment(self, x, segment):
-        """Tool function indicating if a point is in a given segment or not.
-
-        Args:
-            x (float array): point of interest
-            segment (float array): segment considered
-
-        Returns:
-            bool: True if point is in the segment else False
-        """
-        return segment[0] <= x < segment[1]
 
     def __contains__(self, x):
         # * consider argument x -> point, or in iteration x -> coor
-        return all(a <= p <= b for (a, b), p in zip(self.bounds, x))
+        assert len(x) == len(self)
+        return all(self.bounds[:,0] <= x) and all(x <= self.bounds[:,1])
+        # return all(a <= p <= b for (a, b), p in zip(self.bounds, x))
 
-    # todo test it
-    def dimension(self):
+     def dimension(self):
         """Returns the number of dimension of the window box
 
         Returns:
@@ -56,20 +46,14 @@ class BoxWindow:
         """
         return len(self)
 
-    # todo test it
     def volume(self):
         """Returns the volume of the window box defined as the product of size of each dimension.
 
         Returns:
             float: volume of the window box.
         """
-        # * exploit numpy vectors, use - or np.diff, and np.prod
-        v = 1
-        # * consider for a, b in self.bounds
-        for dim in self.bounds:
-            v *= np.abs(dim[0] - dim[1])
-            # ? why using abs, isn't dim[1] > dim[0], is this tested
-        return v
+        return np.prod(np.diff(self.bounds,axis=1))
+
 
     def indicator_function(self, args):
         """Returns if args is in the window box.
@@ -80,7 +64,7 @@ class BoxWindow:
         Returns:
             bool: True if point in window box, else False.
         """
-        return all(args in self)
+        return args in self
 
     def get_random_point_inside(self, rng):
         """Returns a point at random in the window box
@@ -115,9 +99,7 @@ class BoxWindow:
             float array: center coordinates of the box window.
         """
 
-        c = 0.5 * (self.bounds[:, 0] + self.bounds[:, 1])
-
-        return np.array(c)
+        return 0.5 * (self.bounds[:, 0] + self.bounds[:, 1])
 
 
 class UnitBoxWindow(BoxWindow):
@@ -130,9 +112,7 @@ class UnitBoxWindow(BoxWindow):
         """
         # * exploit numpy vectorization power
         # ? how about np.add.outer
-        bounds = np.array([[c - dimension / 2, c + dimension / 2]
-                           for c in center])
-        print(bounds)  # ! why is there a print
+        bounds = np.array([[c - dimension / 2, c + dimension / 2]               for c in center])
 
         super(UnitBoxWindow, self).__init__(bounds)
 

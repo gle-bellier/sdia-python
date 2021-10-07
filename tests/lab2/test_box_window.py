@@ -14,7 +14,8 @@ def test_raise_type_error_when_something_is_called():
     "bounds, expected",
     [
         (np.array([[2.5, 2.5]]), "BoxWindow: [2.5, 2.5]"),
-        (np.array([[0, 5], [0, 5]]), "BoxWindow: [0, 5] x [0, 5]"),
+        (np.array([[0, 5], [0, 5]]), "BoxWindow: [0, 5] x [0, 5]"
+         ),
         (
             np.array([[0, 5], [-1.45, 3.14], [-10, 10]]),
             "BoxWindow: [0.0, 5.0] x [-1.45, 3.14] x [-10.0, 10.0]",
@@ -96,3 +97,54 @@ def test_center_ball_window(args, expected):
 )
 def test_in_ball_window(args, expected):
     assert BallWindow(*args[:2]).__contains__(args[-1]) == expected
+
+
+@pytest.mark.parametrize(
+    "bounds, expected",
+    [
+        (np.array([[2.5, 2.5]]), 1),
+        (np.array([[0, 5], [0, 5]]), 2
+         ),
+        (
+            np.array([[0, 5], [-1.45, 3.14], [-10, 10]]),
+            3,
+        ),
+    ],
+)
+def test__len__(bounds, expected):
+    assert (BoxWindow(bounds).__len__()) == expected
+
+
+
+@pytest.mark.parametrize(
+    "bounds, expected",
+    [
+        (np.array([[2.5, 2.5]]), 1),
+        (np.array([[0, 5], [0, 5]]), 2
+         ),
+        (
+            np.array([[0, 5], [-1.45, 3.14], [-10, 10]]),
+            3,
+        ),
+    ],
+)
+def test_dimension(bounds, expected):
+    assert (BoxWindow(bounds).dimension()) == expected
+
+
+
+@pytest.mark.parametrize(
+    "bounds, expected",
+    [
+        (np.array([[2.5, 2.5]]), 0),
+        (np.array([[0, 5], [0, 5]]), 25
+         ),
+        (
+            np.array([[0, 5], [-1.45, 3.14], [-10, 10]]),
+            459,
+        ),
+    ],
+)
+
+def test_volume(bounds, expected):
+    assert (BoxWindow(bounds).volume() == expected)
