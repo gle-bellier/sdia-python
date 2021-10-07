@@ -4,11 +4,8 @@ import numpy as np
 from lab2.utils import get_random_number_generator
 
 
-# todo clean up the docstrings
 # todo test the whole class
 class BoxWindow:
-    """[This class create Boxes]"""
-
     def __init__(self, args):
         """Create bow window
 
@@ -33,7 +30,7 @@ class BoxWindow:
         return len(self.bounds)
 
     # ! this method is not used
-    # todo convert it to a static method
+    @staticmethod
     def in_segment(self, x, segment):
         """Tool function indicating if a point is in a given segment or not.
 
@@ -47,9 +44,8 @@ class BoxWindow:
         return segment[0] <= x < segment[1]
 
     def __contains__(self, x):
-        # ! be careful, x is used twice in different context
         # * consider argument x -> point, or in iteration x -> coor
-        return all(a <= x <= b for (a, b), x in zip(self.bounds, x))
+        return all(a <= p <= b for (a, b), p in zip(self.bounds, x))
 
     # todo test it
     def dimension(self):
@@ -84,19 +80,17 @@ class BoxWindow:
         Returns:
             bool: True if point in window box, else False.
         """
-        # ? how would you handle multiple points
-        return args in self
+        return all(args in self)
 
-    def get_random_point_inside(self):  # todo add a rng argument
+    def get_random_point_inside(self, rng):
         """Returns a point at random in the window box
 
         Returns:
             float array: random point in the bow window
         """
-        # ! USE rng
+        rng = get_random_number_generator(rng)
         # * exploit numpy, rng.uniform(a, b, size=n)
-        # ! naming: dim -> bound or segment ?
-        return np.array([np.random.uniform(*dim) for dim in self.bounds])
+        return np.array([np.random.uniform(*seg) for seg in self.bounds])
 
     # todo test it
     def rand(self, n=1, rng=None):
@@ -110,7 +104,6 @@ class BoxWindow:
         """
         rng = get_random_number_generator(rng)
         # * Interesting try using get_random_point_inside
-        # ! however the output points are all the same
         # * exploit numpy, rng.uniform(a, b, size=n)
         # ! USE rng
         return [self.get_random_point_inside()] * n
@@ -121,10 +114,9 @@ class BoxWindow:
         Returns:
             float array: center coordinates of the box window.
         """
-        # * interesting use of a lambda function
-        # * exploit numpy vectors, use - or np.diff, +, or np.mean
-        mid = lambda x: (x[0] + x[1]) / 2
-        c = list(map(mid, self.bounds))
+
+        c = 0.5 * (self.bounds[:, 0] + self.bounds[:, 1])
+
         return np.array(c)
 
 
@@ -138,7 +130,8 @@ class UnitBoxWindow(BoxWindow):
         """
         # * exploit numpy vectorization power
         # ? how about np.add.outer
-        bounds = np.array([[c - dimension / 2, c + dimension / 2] for c in center])
+        bounds = np.array([[c - dimension / 2, c + dimension / 2]
+                           for c in center])
         print(bounds)  # ! why is there a print
 
         super(UnitBoxWindow, self).__init__(bounds)
