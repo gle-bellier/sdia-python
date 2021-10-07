@@ -29,20 +29,6 @@ class BoxWindow:
     def __len__(self):
         return len(self.bounds)
 
-    # ! this method is not used
-    @staticmethod
-    def in_segment(self, x, segment):
-        """Tool function indicating if a point is in a given segment or not.
-
-        Args:
-            x (float array): point of interest
-            segment (float array): segment considered
-
-        Returns:
-            bool: True if point is in the segment else False
-        """
-        return segment[0] <= x < segment[1]
-
     def __contains__(self, x):
         # * consider argument x -> point, or in iteration x -> coor
         return all(a <= p <= b for (a, b), p in zip(self.bounds, x))
@@ -80,17 +66,7 @@ class BoxWindow:
         Returns:
             bool: True if point in window box, else False.
         """
-        return all(args in self)
-
-    def get_random_point_inside(self, rng):
-        """Returns a point at random in the window box
-
-        Returns:
-            float array: random point in the bow window
-        """
-        rng = get_random_number_generator(rng)
-        # * exploit numpy, rng.uniform(a, b, size=n)
-        return np.array([np.random.uniform(*seg) for seg in self.bounds])
+        return np.array([point in self for point in args])
 
     # todo test it
     def rand(self, n=1, rng=None):
@@ -103,10 +79,8 @@ class BoxWindow:
         # ? Returns:
         """
         rng = get_random_number_generator(rng)
-        # * Interesting try using get_random_point_inside
-        # * exploit numpy, rng.uniform(a, b, size=n)
-        # ! USE rng
-        return [self.get_random_point_inside()] * n
+        np.random.unform()
+        return [self.get_random_point_inside()]
 
     def center(self):
         """Compute center of the box window.
@@ -115,9 +89,7 @@ class BoxWindow:
             float array: center coordinates of the box window.
         """
 
-        c = 0.5 * (self.bounds[:, 0] + self.bounds[:, 1])
-
-        return np.array(c)
+        return 0.5 * (self.bounds[:, 0] + self.bounds[:, 1])
 
 
 class UnitBoxWindow(BoxWindow):
@@ -132,7 +104,6 @@ class UnitBoxWindow(BoxWindow):
         # ? how about np.add.outer
         bounds = np.array([[c - dimension / 2, c + dimension / 2]
                            for c in center])
-        print(bounds)  # ! why is there a print
 
         super(UnitBoxWindow, self).__init__(bounds)
 
