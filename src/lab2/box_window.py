@@ -32,7 +32,6 @@ class BoxWindow:
         return len(self.bounds)
 
     def __contains__(self, x):
-        # * consider argument x -> point, or in iteration x -> coor
         assert len(x) == len(self)
         return all(self.bounds[:,0] <= x) and all(x <= self.bounds[:,1])
         # return all(a <= p <= b for (a, b), p in zip(self.bounds, x))
