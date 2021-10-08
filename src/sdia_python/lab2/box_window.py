@@ -4,7 +4,6 @@ import numpy as np
 from sdia_python.lab2.utils import get_random_number_generator
 
 
-# todo test the whole class
 class BoxWindow:
     def __init__(self, args):
         """Create bow window
@@ -24,8 +23,8 @@ class BoxWindow:
             str: string representation of the box window.
         """
         # * Nice try!
-        # ? how about a list comprehension using for a, b in self.bounds
         l_str = list(map(lambda x: f"[{x[0]}, {x[1]}]", self.bounds))
+        l_str = [f"[{a}, {b}]" for a, b in self.bounds]
         return "BoxWindow: " + " x ".join(l_str)
 
     def __len__(self):
