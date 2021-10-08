@@ -26,7 +26,6 @@ class BallWindow:
             float: distance of the given point to the center of the ball window.
         """
         # * Nice vectorization using numpy
-        # ? how about np.linalg.norm
         return np.linalg.norm(x - self.center)
 
     def __contains__(self, x):
