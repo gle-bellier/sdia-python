@@ -74,7 +74,8 @@ class BoxWindow:
         # ? Returns:
         """
         rng = get_random_number_generator(rng)
-        return np.array([np.random.uniform(*bound) for bound in self.bounds])
+        return np.array([np.random.uniform(*bound) for bound in self.bounds]
+                        for i in range(n))
 
     def center(self):
         """Compute center of the box window.
@@ -157,6 +158,17 @@ class BallWindow:
         """
         return len(self.center[0])
 
+    def indicator_function(self, args):
+        """Returns if args is in the ball window.
+
+    Args:
+        args (float array): The ball window  [description]
+
+    Returns:
+        bool: True if point in ball window else False.
+    """
+        return np.array([point in self for point in args])
+
     # todo test it
     def volume(self):
         """Computes the volume of the ball.
@@ -187,11 +199,16 @@ def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
 
     # * exploit numpy vectorization power,
     # using unit_box.rand, ball.indicator_function and np.cumsum
-    c = 0
-    l_sum = []  # ! naming: rslt is not clear
-    for i in range(n):
-        c += unit_box.get_random_point_inside() in ball
-        l_sum += [4 * c / (i + 1)]
+    # c = 0
+    # l_sum = []
+    # for i in range(n):
+    #     c += unit_box.get_random_point_inside() in ball
+    #     l_sum += [4 * c / (i + 1)]
+    # return l_sum
+
+    print(unit_box.rand(n))
+    s = ball.indicator_function(unit_box.rand(n))
+    l_sum = np.cumsum(4 * s) / np.arange(1, n, 1)
     return l_sum
 
 
