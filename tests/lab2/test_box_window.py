@@ -86,6 +86,16 @@ def test_center_ball_window(args, expected):
 
 
 @pytest.mark.parametrize(
+    "args, expected",
+    [
+        ((np.array([[2.5, 2.5]]), 10), np.array([[2.5, 2.5]])),
+    ],
+)
+def test_volume_ball_window(args, expected):
+    assert (BallWindow(*args).center == expected).all()
+
+
+@pytest.mark.parametrize(
     "args,  expected",
     [
         ((np.array([[2.5, 2.5]]), 10, np.array([[2.5, 2.5]])), True),
