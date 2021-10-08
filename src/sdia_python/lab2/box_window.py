@@ -104,7 +104,7 @@ class UnitBoxWindow(BoxWindow):
 
 
 # * Nice implementation!
-def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
+def estimate_pi(n=int(1e5), rng=1):  # todo add a rng argument as in self.rand
     """Estimating pi using the rejection sampling method
 
     Args:
@@ -126,7 +126,7 @@ def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
     #     l_sum += [4 * c / (i + 1)]
     # return l_sum
 
-    # Solution exploiting numpy vectorization power
+    # Solution exploiting numpy vectorization power :
     # Computing random point in or outside the ball window
     s = ball.indicator_function(unit_box.rand(n))
     # Calculating the cumulative sum to keep track of the convergence
