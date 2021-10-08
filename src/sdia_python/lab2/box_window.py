@@ -14,7 +14,7 @@ class BoxWindow:
             args (list of N float array): [a, b] bounds for each of the N dimensions of the window box.
         """
 
-        assert (args[:,0] <= args[:,1]).all()
+        assert (args[:, 0] <= args[:, 1]).all()
 
         self.bounds = args
 
@@ -34,7 +34,7 @@ class BoxWindow:
 
     def __contains__(self, x):
         assert len(x) == len(self)
-        return all(self.bounds[:,0] <= x) and all(x <= self.bounds[:,1])
+        return all(self.bounds[:, 0] <= x) and all(x <= self.bounds[:, 1])
         # return all(a <= p <= b for (a, b), p in zip(self.bounds, x))
 
     def dimension(self):
@@ -51,8 +51,7 @@ class BoxWindow:
         Returns:
             float: volume of the window box.
         """
-        return np.prod(np.diff(self.bounds,axis=1))
-
+        return np.prod(np.diff(self.bounds, axis=1))
 
     def indicator_function(self, args):
         """Returns if args is in the window box.
@@ -64,7 +63,6 @@ class BoxWindow:
             bool: True if point in window box, else False.
         """
         return args in self
-
 
     # todo test it
     def rand(self, n=1, rng=None):
@@ -78,12 +76,8 @@ class BoxWindow:
             returns a float array with points in the bounds of the box
         """
         rng = get_random_number_generator(rng)
-<<<<<<< HEAD:src/sdia_python/lab2/box_window.py
-        return np.array([np.random.uniform(*bound) for bound in self.bounds]
-                        for i in range(n))
-=======
-        return np.array([[rng.uniform(*bound) for bound in self.bounds] for i in range(n)])
->>>>>>> 4a43f18eb7e5419edec0109e6a16e9434a2482bd:src/lab2/box_window.py
+        return np.array([[rng.uniform(*bound) for bound in self.bounds]
+                         for i in range(n)])
 
     def center(self):
         """Compute center of the box window.
@@ -169,7 +163,6 @@ class BallWindow:
     def indicator_function(self, args):
         """Returns if args is in the ball window.
 
-<<<<<<< HEAD:src/sdia_python/lab2/box_window.py
     Args:
         args (float array): The ball window  [description]
 
@@ -178,8 +171,6 @@ class BallWindow:
     """
         return np.array([point in self for point in args])
 
-=======
->>>>>>> 4a43f18eb7e5419edec0109e6a16e9434a2482bd:src/lab2/box_window.py
     # todo test it
     def volume(self):
         """Computes the volume of the ball.
@@ -187,20 +178,14 @@ class BallWindow:
         Returns:
             float: volume of the ball window.
         """
-<<<<<<< HEAD:src/sdia_python/lab2/box_window.py
         # Using the gamma function to compute the volume of the ball
         return np.power(np.pi,
                         len(self) / 2) * np.power(
                             self.radius, len(self)) / gamma(len(self) / 2 + 1)
-=======
-        # ! valid only in 3D
-        return (4 * np.pi * np.power(self.radius, 3) / 3)
->>>>>>> 4a43f18eb7e5419edec0109e6a16e9434a2482bd:src/lab2/box_window.py
 
 
 # * Nice implementation!
 # todo write more comments and document the code, for now it's not cristal clear
-<<<<<<< HEAD:src/sdia_python/lab2/box_window.py
 def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
     """Estimating pi using the rejection sampling method
 
@@ -227,29 +212,6 @@ def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
     s = ball.indicator_function(unit_box.rand(n))
     l_sum = np.cumsum(4 * s) / np.arange(1, n, 1)
     return l_sum
-=======
-    def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
-        """Estimating pi using the rejection sampling method
-
-        Args:
-            n (int, optional): number of iterations for pi estimation. Defaults to int(1e5).
-        Returns:
-            float list: list of all estimations of pi (last should be the more accurate)
-        """
-        center = np.array([0, 0])
-
-        ball = BallWindow(center, 1)
-        unit_box = UnitBoxWindow(2, center)
-
-        # * exploit numpy vectorization power,
-        # using unit_box.rand, ball.indicator_function and np.cumsum
-        c = 0
-        l_sum = []  # ! naming: rslt is not clear
-        for i in range(n):
-            c += unit_box.get_random_point_inside() in ball
-            l_sum += [4 * c / (i + 1)]
-        return l_sum
->>>>>>> 4a43f18eb7e5419edec0109e6a16e9434a2482bd:src/lab2/box_window.py
 
 
 if __name__ == "__main__":
