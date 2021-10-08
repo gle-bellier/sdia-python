@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from sdia_python.lab2.utils import get_random_number_generator
+from sdia_python.lab2.ball_window import BallWindow
 
 
 class BoxWindow:
@@ -62,7 +63,6 @@ class BoxWindow:
         """
         return args in self
 
-    # todo test it
     def rand(self, n=1, rng=None):
         """Generate ``n`` points uniformly at random inside the :py:class:`BoxWindow`.
 
@@ -104,7 +104,6 @@ class UnitBoxWindow(BoxWindow):
 
 
 # * Nice implementation!
-# todo write more comments and document the code, for now it's not cristal clear
 def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
     """Estimating pi using the rejection sampling method
 
@@ -127,9 +126,11 @@ def estimate_pi(n=int(1e5)):  # todo add a rng argument as in self.rand
     #     l_sum += [4 * c / (i + 1)]
     # return l_sum
 
-    print(unit_box.rand(n))
+    # Solution exploiting numpy vectorization power
+    # Computing random point in or outside the ball window
     s = ball.indicator_function(unit_box.rand(n))
-    l_sum = np.cumsum(4 * s) / np.arange(1, n, 1)
+    # Calculating the cumulative sum to keep track of the convergence
+    l_sum = np.cumsum(4 * s) / np.arange(1, n + 1, 1)
     return l_sum
 
 
