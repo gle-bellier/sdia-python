@@ -80,3 +80,13 @@ class BallWindow:
         return np.power(np.pi,
                         len(self) / 2) * np.power(
                             self.radius, len(self)) / gamma(len(self) / 2 + 1)
+
+
+class UnitBallWindow(BallWindow):
+    def __init__(self, center):
+        """Create new unit ball window.
+
+        Args:
+            center (float array): coordinates of the center of the ball window.
+        """
+        super(UnitBallWindow, self).__init__(center, radius=1)
