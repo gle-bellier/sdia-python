@@ -97,9 +97,9 @@ class UnitBoxWindow(BoxWindow):
         """
         # * exploit numpy vectorization power
         # ? how about np.add.outer
-        bounds = np.array([[c - dimension / 2, c + dimension / 2]
-                           for c in center])
-
+        # -> using np add outer
+        bounds = np.add.outer(center, np.array([-dimension / 2,
+                                                dimension / 2])).squeeze()
         super(UnitBoxWindow, self).__init__(bounds)
 
 
