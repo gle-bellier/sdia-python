@@ -26,7 +26,7 @@ class BallWindow:
             float: distance of the given point to the center of the ball window.
         """
         # * Nice vectorization using numpy
-        return np.linalg.norm(x - self.center)
+        return np.linalg.norm(x - self.center.squeeze())
 
     def __contains__(self, x):
         """Compute whether a given point is contained in the ball window or not.
@@ -69,7 +69,6 @@ class BallWindow:
     """
         return np.array([point in self for point in args])
 
-    # todo test it
     def volume(self):
         """Computes the volume of the ball.
 
@@ -80,6 +79,31 @@ class BallWindow:
         return np.power(np.pi,
                         len(self) / 2) * np.power(
                             self.radius, len(self)) / gamma(len(self) / 2 + 1)
+
+    def rand(self, n=1, rng=None):
+        """Generate ``n`` points uniformly at random inside the :py:class:`BallWindow`.
+
+        Args:
+            n (int, optional): [description]. Defaults to 1.
+            rng ([type], optional): [description]. Defaults to None.
+
+        Returns:
+            returns a float array with points in the bounds of the box
+        """
+        rng = get_random_number_generator(rng)
+
+        # Using the Muller Method in d dimensions
+        # first computing for a ball centered in O
+        u = rng.normal(
+            0, 1, (n, len(self))
+        )  # an array of n x dimension normally distributed random variables
+
+        norm = np.linalg.norm(u)
+        r = self.radius * rng.random()**(1.0 / len(self))
+        p = r * u / norm
+
+        # we offset the points by the center of the ball
+        return self.center + p
 
 
 class UnitBallWindow(BallWindow):

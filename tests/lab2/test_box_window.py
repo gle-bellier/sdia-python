@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from sdia_python.lab2.box_window import BoxWindow, UnitBoxWindow
-from sdia_python.lab2.ball_window import BallWindow
+from sdia_python.lab2.ball_window import BallWindow, UnitBallWindow
 
 
 def test_raise_type_error_when_something_is_called():
@@ -122,8 +122,8 @@ def test_volume(bounds, expected):
 )
 def test_rand_in_bounds(bounds, n, expected):
     a = BoxWindow(bounds)
+    # we check that all the generated points are really in the window
     assert (all(elm in a for elm in a.rand(n, rng=1)) == expected)
-
 
 
 ## Tests on the UnitBoxWindow :
@@ -133,10 +133,26 @@ def test_rand_in_bounds(bounds, n, expected):
     "args, expected",
     [
         ((10, np.array([[2.5, 2.5]])), np.array([[2.5, 2.5]])),
+        ((10, np.array([[2.5, 2.5, 5, 3]])), np.array([[2.5, 2.5, 5, 3]])),
+        ((15, np.array([[2.5, 2.5, 5, 3]])), np.array([[2.5, 2.5, 5, 3]])),
     ],
 )
 def test_unit_box_center(args, expected):
     assert (UnitBoxWindow(*args).center() == expected).all()
+
+
+@pytest.mark.parametrize(
+    "args, n, expected",
+    [
+        ((10, np.array([[2.5, 2.5]])), 2, True),
+        ((10, np.array([[2.5, 2.5, 5, 3]])), 4, True),
+        ((15, np.array([[2.5, 2.5, 5, 3]])), 8, True),
+    ],
+)
+def test_unit_rand_in_bounds(args, n, expected):
+    a = UnitBoxWindow(*args)
+    # we check that all the generated points are really in the window
+    assert (all(elm in a for elm in a.rand(n, rng=1)) == expected)
 
 
 ## Tests on the BallWindow :
@@ -144,9 +160,9 @@ def test_unit_box_center(args, expected):
 
 @pytest.mark.parametrize(
     "args, expected",
-    [
-        ((np.array([[2.5, 2.5]]), 10), np.array([[2.5, 2.5]])),
-    ],
+    [((np.array([[2.5, 2.5]]), 10), np.array([[2.5, 2.5]])),
+     ((np.array([[2.5, 2.5, 5]]), 1), np.array([[2.5, 2.5, 5]])),
+     ((np.array([[2.5, 2.5, 5, 10]]), 1), np.array([[2.5, 2.5, 5, 10]]))],
 )
 def test_center_ball_window(args, expected):
     assert (BallWindow(*args).center == expected).all()
@@ -155,16 +171,19 @@ def test_center_ball_window(args, expected):
 @pytest.mark.parametrize(
     "args, expected",
     [
-        ((np.array([[2.5, 2.5]]), 10), np.array([[2.5, 2.5]])),
+        # (Center coordinates, radius), volume expected
+        ((np.array([[2.5, 2.5]]), 10), 314.1592653589793),
+        ((np.array([[2.5, 2.5, 5]]), 1), 4.188790204786391),
     ],
 )
 def test_volume_ball_window(args, expected):
-    assert (BallWindow(*args).center == expected).all()
+    assert (BallWindow(*args).volume() == expected)
 
 
 @pytest.mark.parametrize(
     "args,  expected",
     [
+        # (Center coordinates, radius, point of interest), expected
         ((np.array([[2.5, 2.5]]), 10, np.array([[2.5, 2.5]])), True),
         ((np.array([[2, 5]]), 4, np.array([[2.5, 2.5]])), True),
         ((np.array([[2, 2]]), .5, np.array([[2.5, 2.5]])), False),
@@ -176,25 +195,76 @@ def test_in_ball_window(args, expected):
     assert BallWindow(*args[:2]).__contains__(args[-1]) == expected
 
 
+@pytest.mark.parametrize(
+    "args",
+    [
+        # (Center coordinates, radius, point of interest), expected
+        ((np.array([[2.5, 2.5]]), 10)),
+        ((np.array([[2, 5]]), 4)),
+        ((np.array([[2, 2]]), .5)),
+        ((np.array([[0, 2, 3]]), .5)),
+        ((np.array([[0, 2, 3, 4]]), 5)),
+    ],
+)
+def test_rand_in_ball(args):
+    a = BallWindow(*args[:2])
+    # we check that all the generated points are really in the window
+    assert (all(elm in a for elm in a.rand(10, rng=1)) == True)
+
+
 ## Tests on the UnitBallWindow :
 
 
+@pytest.mark.parametrize(
+    "args, expected",
+    # Center coordinates, center point expected
+    [(np.array([[2.5, 2.5]]), np.array([[2.5, 2.5]])),
+     (np.array([[2.5, 2.5, 5]]), np.array([[2.5, 2.5, 5]])),
+     (np.array([[2.5, 2.5, 5, 10]]), np.array([[2.5, 2.5, 5, 10]]))],
+)
+def test_center_unit_ball_window(args, expected):
+    assert (UnitBallWindow(args).center == expected).all()
 
 
+@pytest.mark.parametrize(
+    "args, expected",
+    [
+        # Center coordinates, volume expected
+        (np.array([[2.5, 2.5]]), 3.141592653589793),
+        (np.array([[2.5, 2.5, 5]]), 4.188790204786391),
+    ],
+)
+def test_volume_unit_ball_window(args, expected):
+    assert (UnitBallWindow(args).volume() == expected)
 
 
+@pytest.mark.parametrize(
+    "args,  expected",
+    [
+        # (Center coordinates, point of interest), expected
+        ((np.array([[2.5, 2.5]]), np.array([[2.5, 2.5]])), True),
+        ((np.array([[2, 5]]), np.array([[2.5, 2.5]])), False),
+        ((np.array([[2, 2]]), np.array([[2.5, 2.5]])), True),
+        ((np.array([[0, 2, 3]]), np.array([[1, 2.5, 2.5]])), False),
+        ((np.array([[0, 2, 3, 4]]), np.array([[1, 3, 2.5, 2.5]])), False),
+    ],
+)
+def test_in_unit_ball_window(args, expected):
+    assert UnitBallWindow(args[0]).__contains__(args[-1]) == expected
 
-# @pytest.mark.parametrize(
-#     "bounds, n, expected",
-#     [
-#         (np.array([[2.5, 2.5]]), 2, np.array([[0.05910812], [2.25231848]])),
-#         (np.array([[0, 5], [0, 5]]), 4,
-#          np.array([[2.55910812, 4.75231848], [0.72079806, 4.74324724],
-#                    [1.55915726, 2.11663224], [4.13851297, 2.04599568]])),
-#         (np.array([[0, 5], [-1.45, 3.14], [-10, 10]
-#                    ]), 1, np.array([[2.55910812, 2.91262837, -7.11680775]])),
-#     ],
-# )
-# def test_rand_number(bounds, n, expected):
-#     a = BoxWindow(bounds)
-#     assert (a.rand(n, rng=1) == expected).all()
+
+@pytest.mark.parametrize(
+    "args",
+    [
+        # (Center coordinates)
+        (np.array([[2.5, 2.5]])),
+        (np.array([[2, 5]])),
+        (np.array([[2, 2]])),
+        (np.array([[0, 2, 3]])),
+        (np.array([[0, 2, 3, 4]]))
+    ],
+)
+def test_rand_in_unit_ball(args):
+    a = UnitBallWindow(args)
+    # we check that all the generated points are really in the window
+    assert (all(elm in a for elm in a.rand(10, rng=1)) == True)
