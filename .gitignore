@@ -270,7 +270,7 @@ $RECYCLE.BIN/
 *.npy
 *build
 *.c
-*.html
+# *.html
 __pycache__*
 tp2/img*
 *.zip
