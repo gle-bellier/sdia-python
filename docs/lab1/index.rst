@@ -2,7 +2,15 @@
 Lab 1
 *****
 
-.. automodule:: sdia-python.lab1.functions
-    :members:
-    :inherited-members:
-    :show-inheritance:
+
+
+
+is_unique
+=========
+.. autofunction:: sdia_python.lab1.functions.is_unique()
+
+
+
+triangle_shape
+==============
+.. autofunction:: sdia_python.lab1.functions.triangle_shape()
