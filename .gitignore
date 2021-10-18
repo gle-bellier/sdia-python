@@ -268,7 +268,7 @@ $RECYCLE.BIN/
 *.DS_Store
 *.h5
 *.npy
-*build
+build
 *.c
 # *.html
 __pycache__*
